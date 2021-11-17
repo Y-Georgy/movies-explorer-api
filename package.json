@@ -1,0 +1,32 @@
+{
+  "name": "movies-explorer-api",
+  "version": "1.0.0",
+  "description": "Backend on Express for project Movies-Explorer",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Y-Georgy/movies-explorer-api.git"
+  },
+  "author": "Georgy-Y",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Y-Georgy/movies-explorer-api/issues"
+  },
+  "homepage": "https://github.com/Y-Georgy/movies-explorer-api#readme",
+  "devDependencies": {
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.0.13",
+    "validator": "^13.7.0"
+  }
+}
