@@ -46,11 +46,6 @@ const movieSchema = new mongoose.Schema({ // TODO валидация тут ну
       message: 'Ссылка не валидна',
     },
   },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
   movieId: {
     type: Number,
     required: true,

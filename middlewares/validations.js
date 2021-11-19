@@ -1,5 +1,5 @@
 const { celebrate, Joi } = require('celebrate'); // валидация приходящих данных
-// const { isValidUrl } = require('../utils/methods');
+const { isValidUrl } = require('../utils/methods');
 
 const validateUpdateProfile = celebrate({
   body: Joi.object().keys({
@@ -17,18 +17,39 @@ const validateMovieId = celebrate({
 
 const validateCreateMovie = celebrate({
   // валидируем данные Movie из body
-  body: Joi.object().keys({ // TODO настроить валидацию
-    // country: Joi.string().required().min(2).max(30),
-    // director: Joi.string().required().custom(isValidUrl),
-    // duration: Joi.string().required().min(2).max(30),
-    // year: Joi.string().required().min(2).max(30),
-    // description: Joi.string().required().min(2).max(30),
-    // image: Joi.string().required().min(2).max(30),
-    // trailer: Joi.string().required().min(2).max(30),
-    // nameRU: Joi.string().required().min(2).max(30),
-    // nameEN: Joi.string().required().min(2).max(30),
-    // thumbnail: Joi.string().required().min(2).max(30),
-    // movieId: Joi.string().required().min(2).max(30),
+  body: Joi.object().keys({
+    country: Joi.string().required(),
+    director: Joi.string().required(),
+    duration: Joi.number().required(),
+    year: Joi.string().required(),
+    description: Joi.string().required(),
+    image: Joi.string().required().custom(isValidUrl),
+    trailer: Joi.string().required().custom(isValidUrl),
+    nameRU: Joi.string().required(),
+    nameEN: Joi.string().required(),
+    thumbnail: Joi.string().required().custom(isValidUrl),
+    movieId: Joi.number().required(),
+  }),
+});
+
+const passwRegex = /^[a-zA-Z0-9]{8,}/; // TODO проверить
+
+const validateCreateUser = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30).required(),
+    email: Joi.string().required().email(),
+    password: Joi.string()
+      .required()
+      .pattern(new RegExp(passwRegex)),
+  }),
+});
+
+const validateLoginUser = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string()
+      .required()
+      .pattern(new RegExp(passwRegex)),
   }),
 });
 
@@ -36,4 +57,6 @@ module.exports = {
   validateUpdateProfile,
   validateCreateMovie,
   validateMovieId,
+  validateCreateUser,
+  validateLoginUser,
 };

@@ -23,6 +23,14 @@ const userSchema = new mongoose.Schema({
     minlength: 2,
     maxlength: 30,
   },
+  movies: [
+    {
+      type: Number,
+      // ref: 'User', // TODO ref нужен?
+      required: true,
+      default: [],
+    },
+  ],
 });
 
 module.exports = mongoose.model('user', userSchema);
