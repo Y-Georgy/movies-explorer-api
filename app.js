@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate'); // для обработки ошибок joi, celebrate
 const cors = require('cors'); // пакет node.js
 const router = require('./routes/index');
-const auth = require('./middlewares/auth');
 const centralizedErrors = require('./middlewares/centralizedErrors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
@@ -32,7 +31,6 @@ app.use('*', cors(options)); // ПЕРВЫМ!
 app.use(cookieParser());
 app.use(express.json());
 app.use(requestLogger); // подключаем логгер запросов
-app.use(auth);
 app.use(router);
 app.use(errorLogger); // подключаем логгер ошибок
 app.use(errors()); // обработчик ошибок celebrate
