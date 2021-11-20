@@ -26,7 +26,6 @@ const userSchema = new mongoose.Schema({
   movies: [
     {
       type: Number,
-      // ref: 'User', // TODO ref нужен?
       required: true,
       default: [],
     },

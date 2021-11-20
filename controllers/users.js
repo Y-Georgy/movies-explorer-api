@@ -130,12 +130,13 @@ module.exports.login = (req, res, next) => {
             NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
             { expiresIn: '7d' },
           );
+
           return res
             // отправляем jwt в cookie для защиты от XSS-атаки.
             .cookie('jwt', token, {
               maxAge: 3600000 * 24 * 7,
               httpOnly: true,
-              secure: true,
+              // secure: true, // TODO разкоментить перед деплоем
               sameSite: 'none',
             })
             .send({ message: 'Вход совершен успешно' });
@@ -150,7 +151,7 @@ module.exports.logout = (req, res, next) => {
     .cookie('jwt', '', {
       maxAge: -1,
       httpOnly: true,
-      secure: true,
+      // secure: true, // TODO разкоментить перед деплоем
       sameSite: 'none',
     })
     .send({ message: 'Выход совершен успешно' });

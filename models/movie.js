@@ -49,6 +49,7 @@ const movieSchema = new mongoose.Schema({ // TODO валидация тут ну
   movieId: {
     type: Number,
     required: true,
+    unique: true, // на нем завязана логика контроллеров
   },
   nameRU: {
     type: String,
