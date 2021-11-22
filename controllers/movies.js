@@ -129,6 +129,7 @@ module.exports.deleteMovieById = (req, res, next) => {
                   return next(err);
                 });
             }
+            return res.send({ message: 'Фильм удален успешно' });
           });
       }
       throw new NotFoundError('Что то пошло не так');
