@@ -2,7 +2,6 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken'); // модуль проверки token
 const UnauthorizedError = require('../errors/unauthorized-err');
 
-// eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
 

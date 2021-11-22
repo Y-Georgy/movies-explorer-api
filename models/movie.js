@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const movieSchema = new mongoose.Schema({ // TODO валидация тут нужна?
+const movieSchema = new mongoose.Schema({
   country: {
     type: String,
     required: true,

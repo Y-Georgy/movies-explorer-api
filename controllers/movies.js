@@ -10,7 +10,6 @@ module.exports.getMovies = (req, res, next) => {
 
   User.findById(userId)
     .then((user) => {
-      console.log('user5', user.movies);
       if (user.movies.length === 0) {
         return res.send({ message: 'Нет сохраненных фильмов' });
       }
@@ -56,8 +55,7 @@ module.exports.createMovie = (req, res, next) => {
     )
       .then((user) => {
         if (user) {
-          // return res.send({ data: user }); // можно отправить еще newMovie
-          return res.send({ data: [user, newMovie] }); // можно отправить еще newMovie
+          return res.send({ data: [user, newMovie] });
         }
         throw new NotFoundError('Что то пошло не так1');
       })
@@ -101,7 +99,7 @@ module.exports.createMovie = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.deleteMovieById = (req, res, next) => { // TODO доделать
+module.exports.deleteMovieById = (req, res, next) => {
   const id = req.params.movieId; // в параметрах передаем id фильма, а не mongo.id фильма
 
   // Удаляем id фильма из массива movies у пользователя
@@ -115,27 +113,25 @@ module.exports.deleteMovieById = (req, res, next) => { // TODO доделать
         // проверяем есть ли у других пользователей этот фильм в сохраненых
         return User.find({ movies: id })
           .then((users) => {
-            console.log('users', users);
             // если ни у одного пользователя этот фильм не сохранен, то удаляем его
             if (users.length === 0) {
               Movie.deleteOne({ movieId: id })
                 .then((movie) => {
-                  console.log('movieDeleteOne', movie);
                   if (movie) {
                     return res.send({ message: 'Фильм удален успешно' });
                   }
-                  throw new NotFoundError('Передан несуществующий _id карточки');
+                  throw new NotFoundError('Передан несуществующий _id фильма');
                 })
                 .catch((err) => {
                   if (err.name === 'CastError') {
-                    return next(new IncorrectDataError('Переданы некорректные данные для постановки/снятии лайка'));
+                    return next(new IncorrectDataError('Переданы некорректные данные'));
                   }
                   return next(err);
                 });
             }
           });
       }
-      throw new NotFoundError('Что то пошло не так3');
+      throw new NotFoundError('Что то пошло не так');
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -143,92 +139,4 @@ module.exports.deleteMovieById = (req, res, next) => { // TODO доделать
       }
       return next(err);
     });
-
-  // Movie.find({ movieId: movieId })
-  //   .then((movie) => {
-  //     if (!movie) {
-  //       throw new NotFoundError('Фильм с указанным _id не найдена');
-  //     }
-  //     if (movie.owner._id.toString() === userId) {
-  //       Movie.findByIdAndRemove(movieId)
-  //         .orFail(() => {
-  //           throw new NotFoundError('Карточка с указанным _id не найдена');
-  //         })
-  //         .then((deletedMovie) => res.send({ data: deletedMovie }))
-  //         .catch((err) => {
-  //           if (err.name === 'CastError') {
-  //              eslint-disable-next-line max-len
-  //             return next(new IncorrectDataError('Передан некорректный id при удалении карточки'));
-  //           }
-  //           return next(err);
-  //         });
-  //     } else {
-  //       throw next(new ForbiddenDataError('У Вас нет прав на удаление этой карточки'));
-  //     }
-  //   })
-  //   .catch(next);
 };
-
-// module.exports.saveMovie = (req, res, next) => {
-//   const newMovie = req.movie;
-
-//   User.findByIdAndUpdate(
-//     req.user._id,
-//     // TODO проверить ключ в req.movies
-//     { $addToSet: { movies: newMovie.movieId } }, // добавить _id в массив, если его там нет
-//     { new: true },
-//   )
-//     .then((user) => {
-//       if (user) {
-//         return res.send({ data: user }); // можно отправить еще newMovie
-//       }
-//       throw new NotFoundError('Что то пошло не так');
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         next(new IncorrectDataError('Что то пошло не так'));
-//       }
-//       next(err);
-//     });
-// };
-
-// module.exports.removeMovie = (req, res, next) => {
-//   const newMovie = req.movie;
-
-//   User.findByIdAndUpdate(
-//     req.params.cardId,
-//     { $pull: { likes: req.user._id } }, // убрать _id из массива
-//     { new: true, runValidators: true },
-//   )
-//     .then((card) => {
-//       if (card) {
-//         return res.send({ data: card });
-//       }
-//       throw new NotFoundError('Передан несуществующий _id карточки');
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         next(new IncorrectDataError('Переданы некорректные данные для постановки/снятии лайка'));
-//       }
-//       next(err);
-//     });
-// };
-
-// УДАЛЕНИЕ MOVIEID у USER.movies
-// User.findByIdAndUpdate(
-//   req.user._id,
-//   { $pull: { movies: movie.movieId } }, // убрать _id из массива
-//   { new: true, runValidators: true },
-// )
-//   .then((user) => {
-//     if (user) {
-//       return res.send({ data: user }); // можно отправить еще newMovie
-//     }
-//     throw new NotFoundError('Что то пошло не так');
-//   })
-//   .catch((err) => {
-//     if (err.name === 'CastError') {
-//       return next(new IncorrectDataError('Что то пошло не так'));
-//     }
-//     return next(err);
-//   });

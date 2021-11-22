@@ -32,7 +32,7 @@ const validateCreateMovie = celebrate({
   }),
 });
 
-const passwRegex = /^[a-zA-Z0-9]{8,}/; // TODO проверить
+const passwRegex = /^[a-zA-Z0-9]{8,}/;
 
 const validateCreateUser = celebrate({
   body: Joi.object().keys({
