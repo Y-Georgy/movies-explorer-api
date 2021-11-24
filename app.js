@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
@@ -7,15 +6,15 @@ const { errors } = require('celebrate'); // для обработки ошибо
 const cors = require('cors'); // пакет node.js
 const router = require('./routes/index');
 const { limiter } = require('./middlewares/limiter');
-const options = require('./utils/cors');
+const { corsOptions } = require('./utils/constants');
 const centralizedErrors = require('./middlewares/centralizedErrors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { MONGO_URL, PORT } = require('./config');
 
-const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/moviesdb' } = process.env;
 const app = express();
 mongoose.connect(MONGO_URL);
 
-app.use('*', cors(options));
+app.use('*', cors(corsOptions));
 app.use(requestLogger); // подключаем логгер запросов
 app.use(limiter); // apply to all requests
 app.use(helmet());

@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
   },
   movies: [
     {
-      type: Number,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
       default: [],
     },

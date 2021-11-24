@@ -14,7 +14,7 @@ module.exports.getMovies = (req, res, next) => {
         return res.send({ message: 'Нет сохраненных фильмов' });
       }
       if (user.movies.length !== 0) {
-        return Movie.find({ movieId: user.movies })
+        return Movie.find({ _id: user.movies })
           .then((movies) => {
             if (movies.length === 0) {
               return res.send({ message: 'Фильм не сохранен в коллекции movies' });
@@ -40,7 +40,7 @@ module.exports.createMovie = (req, res, next) => {
     nameRU,
     nameEN,
     thumbnail,
-    id,
+    movieId,
   } = req.body;
 
   // Логика:
@@ -48,26 +48,27 @@ module.exports.createMovie = (req, res, next) => {
   // фильмы не дублируются при сохранении разными пользователями
   // id фильмов, сохраненных пользователем, хранятся в коллекции users, в массиве movies
   function saveMovieToUserMovies(newMovie) {
+    const mId = newMovie._id.toString();
     User.findByIdAndUpdate(
       req.user._id,
-      { $addToSet: { movies: newMovie.movieId } }, // добавить id в массив, если его там нет
+      { $addToSet: { movies: mId } }, // добавить id в массив, если его там нет
       { new: true },
     )
       .then((user) => {
         if (user) {
           return res.send({ data: [user, newMovie] });
         }
-        throw new NotFoundError('Что то пошло не так1');
+        throw new NotFoundError('Пользователь по указанному _id не найден');
       })
       .catch((err) => {
         if (err.name === 'CastError') {
-          return next(new IncorrectDataError('Что то пошло не так2'));
+          return next(new IncorrectDataError('Передан некорректный id пользователя'));
         }
         return next(err);
       });
   }
 
-  Movie.find({ movieId: id })
+  Movie.find({ movieId })
     .then((movie) => {
       if (movie.length === 0) { // Если нет такого фильма, то создать
         Movie.create({
@@ -81,7 +82,7 @@ module.exports.createMovie = (req, res, next) => {
           nameRU,
           nameEN,
           thumbnail,
-          movieId: id,
+          movieId,
         })
           .then((newMovie) => {
             saveMovieToUserMovies(newMovie);
@@ -100,8 +101,7 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovieById = (req, res, next) => {
-  const id = req.params.movieId; // в параметрах передаем id фильма, а не mongo.id фильма
-
+  const { id } = req.params;
   // Удаляем id фильма из массива movies у пользователя
   User.findByIdAndUpdate(
     req.user._id,
@@ -115,28 +115,22 @@ module.exports.deleteMovieById = (req, res, next) => {
           .then((users) => {
             // если ни у одного пользователя этот фильм не сохранен, то удаляем его
             if (users.length === 0) {
-              Movie.deleteOne({ movieId: id })
+              return Movie.findByIdAndRemove(id)
                 .then((movie) => {
                   if (movie) {
                     return res.send({ message: 'Фильм удален успешно' });
                   }
                   throw new NotFoundError('Передан несуществующий _id фильма');
-                })
-                .catch((err) => {
-                  if (err.name === 'CastError') {
-                    return next(new IncorrectDataError('Переданы некорректные данные'));
-                  }
-                  return next(err);
                 });
             }
             return res.send({ message: 'Фильм удален успешно' });
           });
       }
-      throw new NotFoundError('Что то пошло не так');
+      throw new NotFoundError('Пользователь по указанному _id не найден');
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new IncorrectDataError('Что то пошло не так'));
+        return next(new IncorrectDataError('Передан некорректный id пользователя'));
       }
       return next(err);
     });

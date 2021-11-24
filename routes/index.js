@@ -5,7 +5,7 @@ const { validateCreateUser, validateLoginUser } = require('../middlewares/valida
 const { createUser, login, logout } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 
-const NotFoundError = require('../errors/not-found-err');
+const IncorrectDataError = require('../errors/incorrect-data-err');
 
 router.post('/signup', validateCreateUser, createUser);
 router.post('/signin', validateLoginUser, login);
@@ -15,7 +15,7 @@ router.use('/', userRouter);
 router.use('/', moviesRouter);
 
 router.use((req, res, next) => {
-  next(new NotFoundError('Ошибка - некорректный запрос'));
+  next(new IncorrectDataError('Ошибка - ресурс не найден'));
 });
 
 module.exports = router;

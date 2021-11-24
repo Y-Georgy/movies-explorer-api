@@ -1,8 +1,8 @@
-require('dotenv').config();
 const bcrypt = require('bcryptjs'); // установленный модуль для хеширования пароля
 const validator = require('validator');
 const jwt = require('jsonwebtoken'); // модуль для создания токенов
 const User = require('../models/user'); // импортируем модель
+const { JWT_SECRET } = require('../config');
 
 const IncorrectDataError = require('../errors/incorrect-data-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
@@ -122,12 +122,10 @@ module.exports.login = (req, res, next) => {
             throw new UnauthorizedError('Неправильные почта или пароль');
           }
 
-          const { NODE_ENV, JWT_SECRET } = process.env;
-
           // аутентификация успешна
           const token = jwt.sign(
             { _id: user._id },
-            NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
+            JWT_SECRET,
             { expiresIn: '7d' },
           );
 

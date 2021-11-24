@@ -11,7 +11,7 @@ const validateUpdateProfile = celebrate({
 const validateMovieId = celebrate({
   // валидируем id в параметрах запроса
   params: Joi.object().keys({
-    movieId: Joi.number().required(), // Это не mongo.id, а id фильма, поэтому без .hex().length(24)
+    id: Joi.string().required().hex().length(24),
   }),
 });
 
@@ -28,7 +28,7 @@ const validateCreateMovie = celebrate({
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
     thumbnail: Joi.string().required().custom(isValidUrl),
-    id: Joi.number().required(),
+    movieId: Joi.number().required(),
   }),
 });
 

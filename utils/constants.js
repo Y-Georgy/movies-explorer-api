@@ -1,4 +1,4 @@
-const options = {
+const corsOptions = {
   origin: [
     'http://localhost:3001',
     // 'http://mesto.tmweb.ru',
@@ -12,5 +12,5 @@ const options = {
 };
 
 module.exports = {
-  options,
+  corsOptions,
 };
