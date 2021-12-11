@@ -9,7 +9,7 @@ const IncorrectDataError = require('../errors/incorrect-data-err');
 
 router.post('/signup', validateCreateUser, createUser);
 router.post('/signin', validateLoginUser, login);
-router.get('/signout', logout);
+router.post('/signout', logout);
 router.use(auth);
 router.use('/', userRouter);
 router.use('/', moviesRouter);
