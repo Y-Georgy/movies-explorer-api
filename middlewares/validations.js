@@ -32,24 +32,18 @@ const validateCreateMovie = celebrate({
   }),
 });
 
-const passwRegex = /^[a-zA-Z0-9]{8,}/;
-
 const validateCreateUser = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).required(),
+    name: Joi.string().min(1).required(),
     email: Joi.string().required().email(),
-    password: Joi.string()
-      .required()
-      .pattern(new RegExp(passwRegex)),
+    password: Joi.string().min(8).required()
   }),
 });
 
 const validateLoginUser = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string()
-      .required()
-      .pattern(new RegExp(passwRegex)),
+    password: Joi.string().min(8).required()
   }),
 });
 
