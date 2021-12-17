@@ -1,8 +1,8 @@
 const corsOptions = {
   origin: [
-    'http://localhost:3001',
-    // 'http://mesto.tmweb.ru',
-    // 'https://mesto.tmweb.ru',
+    'http://localhost:3000',
+    'http://movie.nomoredomains.rocks',
+    'https://movie.nomoredomains.rocks',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,

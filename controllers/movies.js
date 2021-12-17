@@ -56,7 +56,7 @@ module.exports.createMovie = (req, res, next) => {
     )
       .then((user) => {
         if (user) {
-          return res.send({ data: [user, newMovie] });
+          return res.send({ data: {user: user, movie: newMovie} });
         }
         throw new NotFoundError('Пользователь по указанному _id не найден');
       })
