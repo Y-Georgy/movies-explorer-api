@@ -130,7 +130,6 @@ module.exports.login = (req, res, next) => {
           );
 
           return res
-            // отправляем jwt в cookie для защиты от XSS-атаки.
             .cookie('jwt', token, {
               maxAge: 3600000 * 24 * 7,
               httpOnly: true,
@@ -147,5 +146,5 @@ module.exports.login = (req, res, next) => {
 module.exports.logout = (req, res) => {
   res
     .clearCookie('jwt')
-    .end();
+    .send({ message: 'Выход совершен успешно' });
 };
